@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>글 한 편으로 끝내는 AI 시각화 · 실습 프롬프트</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='8'%20fill='%234a5a45'/%3E%3Ctext%20x='16'%20y='23'%20font-size='19'%20font-weight='700'%20text-anchor='middle'%20fill='white'%20font-family='Arial%2Csans-serif'%3EJ%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
@@ -101,6 +102,22 @@
   .chip.on{background:var(--accent);color:#fff;border-color:var(--accent)}
   .chip.on small{color:#dbe4d4}
 
+
+  /* 단계 흐름 버튼 */
+  .stepbar{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:6px 0 10px}
+  .stepbar a{position:relative;display:block;text-align:center;text-decoration:none;
+    background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px 6px 9px;
+    color:var(--ink);font-weight:700;font-size:14px;line-height:1.35}
+  .stepbar a span{display:inline-block;background:var(--accent);color:#fff;font-size:15px;font-weight:800;
+    line-height:1;padding:6px 13px;border-radius:14px;margin-bottom:7px}
+  .stepbar a small{display:block;font-weight:500;font-size:12px;color:var(--dim);margin-top:3px}
+  .stepbar a:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+  .stepbar a:hover small{color:#e8cf9b}
+  .stepbar a:hover span{background:#fff;color:var(--accent)}
+  .stepbar a.end{background:var(--accent-soft)}
+  .stepbar a:not(:last-child)::after{content:"›";position:absolute;right:-9px;top:50%;
+    transform:translateY(-50%);color:var(--gold);font-size:18px;font-weight:800}
+  .step.flash{box-shadow:0 0 0 3px #e8cf9b}
   .legend{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 0;font-size:14px}
   .legend span{border:1px solid var(--line);background:#fff;border-radius:20px;padding:5px 13px}
   footer{border-top:1px solid var(--line);color:var(--dim);font-size:13px;
@@ -113,6 +130,8 @@
     .step .why{margin-left:0}
     .prompt pre{font-size:13.5px}
     th{white-space:normal}
+    .stepbar{grid-template-columns:repeat(2,1fr)}
+    .stepbar a::after{display:none}
   }
 </style>
 </head>
@@ -121,16 +140,16 @@
 <div class="topbar">
   <span class="name">글 한 편으로 끝내는 AI 시각화 자료 제작</span>
   <span class="tag">실습 프롬프트</span>
-  <span class="addr">bit.ly/주소입력</span>
+  <span class="addr">bit.ly/job-j03</span>
 </div>
 
 <div class="shell">
 
 <aside class="rail">
   <h4>진행 순서</h4>
-  <a href="#set"><b>시작 전</b><br>도구 열기</a>
-  <a href="#p1"><b>01</b><br>발표자료 초안</a>
-  <a href="#gamma"><b>01</b><br>Gamma로 만들기</a>
+  <a href="#set"><b>준비</b><br>오늘 쓰는 도구</a>
+  <a href="#p1"><b>01-1</b><br>발표자료 초안</a>
+  <a href="#gamma"><b>01-2</b><br>Gamma로 만들기</a>
   <a href="#p2"><b>02</b><br>내 주제로 한 번 더</a>
   <a href="#p3"><b>03</b><br>도식화 · Napkin</a>
   <a href="#p4"><b>04</b><br>홍보물 · Canva</a>
@@ -142,8 +161,8 @@
 
 <!-- ============ 시작 전 ============ -->
 <section class="part" id="set">
-  <div class="head"><span class="no">0</span><h2>시작 전 — 탭 다섯 개 열기</h2></div>
-  <p class="lead">오늘 쓰는 도구입니다. 순서대로 열어 두고 로그인해 주세요.</p>
+  <div class="head"><span class="no">0</span><h2>준비</h2></div>
+  <p class="lead">오늘 쓰는 도구입니다. 순서에 맞춰 사용할 때 로그인해 주세요.</p>
   <div class="step">
     <div class="linkrow">
       <a class="linkbtn alt" href="https://gemini.google.com" target="_blank" rel="noopener">Gemini<small>프롬프트 실행 (ChatGPT도 됨)</small></a>
@@ -162,25 +181,33 @@
 
 <!-- ============ 01 ============ -->
 <section class="part" id="p1">
-  <div class="head"><span class="no">01</span><h2>발표자료 초안 — Gemini로 글 만들기</h2></div>
-  <p class="lead">축제 기획안 하나로 다 같이 합니다. 0 → 1차 → 2차 → 3차 순서입니다.</p>
+  <div class="head"><span class="no">01-1</span><h2>발표자료 초안 — Gemini로 글 만들기</h2></div>
+  <p class="lead">축제 기획안 하나로 다 같이 합니다. 버튼을 누르면 그 단계의 프롬프트로 이동합니다.</p>
+  <nav class="stepbar">
+    <a href="#s1"><span>확인</span><br>항목 확인<small>채팅 하나</small></a>
+    <a href="#s2"><span>0단계</span><br>기획안 초안<small>새 채팅</small></a>
+    <a href="#s3"><span>1차</span><br>구조 만들기<small>새 채팅</small></a>
+    <a href="#s4"><span>2차</span><br>내용 채우기<small>같은 채팅</small></a>
+    <a href="#s5"><span>3차</span><br>Gamma용 글로 정리<small>같은 채팅</small></a>
+    <a href="#gamma" class="end"><span>▶</span><br>Gamma 생성<small>01-2</small></a>
+  </nav>
 
-  <div class="step">
-    <div class="title"><span class="badge">?</span><h3>기획안에는 무엇이 들어가야 할까요?</h3></div>
-    <p class="why">먼저 AI에게 물어보고, 나온 항목을 우리 기획안과 비교합니다.</p>
+  <div class="step" id="s1">
+    <div class="title"><span class="badge">확인</span><h3>[확인] 기획안에는 무엇이 들어가야 할까요?</h3></div>
+    <p class="why">먼저 AI에게 물어보고, 나온 항목을 강사 화면과 비교해 봅니다.</p>
     <div class="prompt">
       <div class="label">항목 물어보기</div>
-      <pre>나는 구청 문화 부서에서 행사를 기획하는 담당자야.
-행사 기획안을 쓰려고 하는데, 기획안에 꼭 들어가야 할 항목을 알려줘.
-나중에 이 기획안으로 10장짜리 발표자료도 만들 거야.
-항목 이름과 한 줄 설명으로, 10개 이내 표로 정리해줘.</pre>
+      <pre>[상황] 나는 구청 문화 부서에서 행사를 기획하는 담당자야.
+[목적] 행사 기획안을 쓰고, 나중에 이 기획안으로 10장짜리 발표자료도 만들 거야.
+[요청] 기획안에 꼭 들어가야 할 항목을 알려줘.
+[형식] 항목 이름과 한 줄 설명으로, 10개 이내 표로 정리해줘.</pre>
       <button class="act">복사하기</button>
     </div>
     <div class="tip">AI는 <b class="k">항목</b>을 알려 줍니다. 내 행사에 맞는 것을 <b class="k">고르고, 규칙을 붙이는 것</b>은 내가 합니다.</div>
   </div>
 
-  <div class="step">
-    <div class="title"><span class="badge">0</span><h3>기획안 만들기</h3></div>
+  <div class="step" id="s2">
+    <div class="title"><span class="badge">0단계</span><h3>[새 채팅] 기획안 초안 만들기</h3></div>
     <p class="why">Gemini <b>새 채팅</b>에 그대로 보냅니다. 01에서는 [행사 정보]를 바꾸지 않습니다.</p>
     <div class="prompt">
       <div class="label">0단계 · 기획안 생성 프롬프트</div>
@@ -267,8 +294,8 @@
     </details>
   </div>
 
-  <div class="step">
-    <div class="title"><span class="badge">1차</span><h3>구조 잡기 — 10장 뼈대</h3></div>
+  <div class="step" id="s3">
+    <div class="title"><span class="badge">1차</span><h3>[새 채팅] 1차 구조 만들기 — 10장 뼈대</h3></div>
     <p class="why"><b>새 채팅</b>에 붙이고, 맨 아래 [붙여넣기] 자리에 0단계 기획안을 넣어 보냅니다.</p>
     <div class="prompt">
       <div class="label">1차 프롬프트</div>
@@ -310,8 +337,8 @@
     <div class="caution">이 결과(A)는 <b>Gamma에 넣지 않습니다.</b> 2차와 비교하도록 화면에 남겨 두고, 채팅 창을 닫지 마세요.</div>
   </div>
 
-  <div class="step">
-    <div class="title"><span class="badge">2차</span><h3>내용 채우기</h3></div>
+  <div class="step" id="s4">
+    <div class="title"><span class="badge">2차</span><h3>[같은 채팅] 2차 내용 채우기</h3></div>
     <p class="why">1차를 실행한 <b>같은 채팅</b>에 이어서 보냅니다.</p>
     <div class="prompt">
       <div class="label">2차 프롬프트</div>
@@ -376,30 +403,33 @@
       <button class="act">복사하기</button>
     </div>
     <div class="tip">1차 결과(A)와 <b class="k">같은 장끼리</b> 비교해 보세요. 예를 들어 '행사 개요' 장.</div>
-    <div class="caution"><b>[확인]</b>이 붙은 줄 = AI가 지어낸 숫자 · 이름 · 날짜입니다. 실제 업무라면 여기서 하나씩 맞는 값으로 고칩니다.</div>
-  </div>
-
-  <div class="step">
-    <div class="title"><span class="badge">3차</span><h3>정리 — Gamma에 넣기 전</h3></div>
-    <p class="why">Gamma는 글을 한 글자도 바꾸지 않고 넣습니다. 라벨과 [확인]을 여기서 지웁니다. <b>같은 채팅</b>에 보냅니다.</p>
+    <div class="caution"><b>[확인]</b>이 붙은 줄 = AI가 지어낸 숫자 · 이름 · 날짜입니다.</div>
     <div class="prompt">
-      <div class="label">3차 ① · 오늘 수업 (숫자는 살리고 표시만 지우기)</div>
-      <pre>[확인] 표시와 줄 맨 앞의 라벨(핵심 : / 근거 : / 수치 : / 예시 : / 흐름 : / 유의 : / 기대효과 : / 다음 단계 : / 문의 :)을 모두 지워 줘. 나머지 글자는 한 글자도 바꾸지 말고 코드블록 하나로 다시 줘.</pre>
+      <div class="label">⭐ 결과가 너무 짧다면 — 같은 채팅에 이어서 (3차 전에)</div>
+      <pre>장마다 내용이 너무 짧아. 장 수와 불릿 개수는 그대로 두고, 각 줄을 조금 더 구체적으로 써줘. 새로 넣은 숫자 · 이름 · 날짜에는 [확인]을 그대로 붙여줘.</pre>
       <button class="act">복사하기</button>
     </div>
+  </div>
+
+  <div class="step" id="s5">
+    <div class="title"><span class="badge">3차</span><h3>[같은 채팅] 3차 Gamma용 글로 정리</h3></div>
+    <p class="why">Gamma는 글을 한 글자도 바꾸지 않고 넣습니다. <b>[확인] 표시와 라벨</b>을 여기서 지웁니다. <b>같은 채팅</b>에 보냅니다.</p>
     <div class="prompt">
-      <div class="label">3차 ② · 실제 업무 (지어낸 숫자를 빈칸으로)</div>
-      <pre>[확인]이 붙은 줄의 지어낸 숫자 · 날짜는 [ ]로 바꿔 줘. 그다음 [확인] 표시와 줄 맨 앞의 라벨을 모두 지우고, 나머지 글자는 한 글자도 바꾸지 말고 코드블록 하나로 다시 줘.</pre>
+      <div class="label">3차 프롬프트</div>
+      <pre>줄 맨 앞의 라벨(핵심 : / 근거 : / 수치 : / 예시 : / 흐름 : / 유의 : / 기대효과 : / 다음 단계 : / 문의 :)을 모두 지워 줘. [확인] 표시도 모두 지워 줘. 나머지 글자는 한 글자도 바꾸지 말고 코드블록 하나로 다시 줘.</pre>
       <button class="act">복사하기</button>
     </div>
     <div class="tip"><b class="k">"한 글자도 바꾸지 말고"</b>를 빼면 AI가 정리하면서 글을 다시 써 내용이 바뀔 수 있습니다.</div>
-  </div>
+    <div class="caution">실제 업무에서는 3차 전에 <b>[확인] 표시가 붙은 항목을 본인이 반드시 확인한 뒤 수정</b>합니다.<br>3차 프롬프트에서는 [확인] 표시와 라벨을 지웁니다.</div>  </div>
 </section>
 
 <!-- ============ Gamma ============ -->
 <section class="part" id="gamma">
-  <div class="head"><span class="no">01</span><h2>Gamma로 발표자료 만들기</h2></div>
+  <div class="head"><span class="no">01-2</span><h2>Gamma로 발표자료 만들기</h2></div>
   <p class="lead">3차 결과를 한 번에 넣습니다. 프롬프트는 없고, 고르는 순서만 있습니다.</p>
+  <div class="linkrow">
+    <a class="linkbtn alt" href="https://gamma.app/signup?r=h3exaieu6ekix4d" target="_blank" rel="noopener">Gamma 열기<small>3차 결과를 복사한 뒤 새 탭에서</small></a>
+  </div>
   <div class="step">
     <ol class="flow">
       <li>gamma.app → 입력창 아래 <b>'프레젠테이션'</b> 선택 ('문서'가 아닙니다)</li>
@@ -433,15 +463,15 @@
       <pre id="gen-menu"></pre>
       <button class="act">복사하기</button>
     </div>
-    <div class="tip">메뉴에 없는 주제는 <b class="k">'직접 쓰기'</b>를 고르고 [행사 정보] 다섯 줄을 채우세요. 다섯 번째 줄(작년 · 기존 방식)은 비교 도식의 재료라 꼭 씁니다.</div>
+    <div class="tip">메뉴에 없는 주제는 <b class="k">'직접 쓰기'</b>를 고르고 [행사 정보] 다섯 줄을 채우세요. 다섯 번째 줄(작년 · 기존 방식)은 '작년과 달라지는 점'의 재료라 꼭 씁니다.</div>
     <div class="caution">결과보고서 · 예산안처럼 목차가 다르거나 알릴 대상이 없는 글은 오늘 흐름(포스터까지)에 맞지 않습니다.</div>
   </div>
 
   <div class="step">
     <div class="title"><span class="badge">2</span><h3>01과 같은 순서로</h3></div>
     <ol class="flow">
-      <li><b>새 채팅</b> → <a href="#p1">1차 프롬프트</a> + 내 기획안</li>
-      <li>같은 채팅 → 2차 → 3차 ①</li>
+      <li>위 1번에서 만든 내 기획안으로 → <a href="#s3">1차 [새 채팅] 구조 만들기</a></li>
+      <li><a href="#s4">2차 [같은 채팅] 내용 채우기</a> → <a href="#s5">3차 [같은 채팅] Gamma용 글로 정리</a></li>
       <li>Gamma '프레젠테이션' → 이번에는 질문 ①을 <b>'압축' 또는 '확장'</b>으로 (옆 사람과 다르게)</li>
       <li>생성 → 내 3차 글, 01 결과와 나란히 비교</li>
     </ol>
@@ -472,15 +502,18 @@
 <!-- ============ 03 ============ -->
 <section class="part" id="p3">
   <div class="head"><span class="no">03</span><h2>도식화 — Napkin</h2></div>
-  <p class="lead">기획안(0단계 원문)에서 문단 세 개를 하나씩 붙여 도식으로 바꿉니다.</p>
+  <p class="lead">기획안(0단계 원문)에서 <b>운영 절차</b> 문단 하나를 도식으로 바꿉니다. 타임라인 · 비교는 ⭐ 선택(크레딧이 남으면)입니다.</p>
+  <div class="linkrow">
+    <a class="linkbtn alt" href="https://www.napkin.ai" target="_blank" rel="noopener">Napkin 열기<small>새 탭에서 · 구글로 로그인</small></a>
+  </div>
 
   <div class="step">
     <div class="title"><span class="badge">1</span><h3>어떤 문단을 넣을까</h3></div>
     <table>
       <tr><th>도식</th><th>기획안 문단</th><th>카테고리</th><th>넣을 발표자료 장</th></tr>
       <tr><td>프로세스</td><td>5. 운영 절차</td><td>Process</td><td>운영 절차</td></tr>
-      <tr><td>타임라인</td><td>6. 추진 일정</td><td>Timelines</td><td>추진 일정</td></tr>
-      <tr><td>비교</td><td>1. 추진 배경 안의 '작년과 달라지는 점'</td><td>Comparison</td><td>추진 배경</td></tr>
+      <tr><td>⭐ 타임라인</td><td>6. 추진 일정</td><td>Timelines</td><td>추진 일정</td></tr>
+      <tr><td>⭐ 비교</td><td>1. 추진 배경 안의 '작년과 달라지는 점'</td><td>Comparison</td><td>추진 배경</td></tr>
     </table>
     <div class="tip">3차 결과가 아니라 <b class="k">0단계 기획안 원문</b>에서 가져오세요. 설명이 더 많아 도식이 풍부하게 나옵니다.</div>
   </div>
@@ -535,50 +568,58 @@
 <!-- ============ 04 ============ -->
 <section class="part" id="p4">
   <div class="head"><span class="no">04</span><h2>홍보물 — Canva</h2></div>
-  <p class="lead">같은 기획안으로 포스터 한 장, SNS 카드 2~3장을 만듭니다.</p>
+  <p class="lead">Canva AI로 포스터 → 포스터를 옮긴 SNS 게시물(애니메이션 · MP4) → 페이지를 추가해 마스코트 SNS 카드 순서로 만듭니다.</p>
+  <div class="linkrow">
+    <a class="linkbtn alt" href="https://www.canva.com" target="_blank" rel="noopener">Canva 열기<small>새 탭에서 · 구글로 로그인</small></a>
+  </div>
 
   <div class="step">
     <div class="title"><span class="badge">1</span><h3>포스터 만들기</h3></div>
-    <p class="why">홈 위쪽 'Canva AI' → '디자인' → 아래 프롬프트 붙여넣기. ✏️ 줄을 내 주제로 바꿉니다.</p>
+    <p class="why">Canva 홈 아래 입력창(<b>'이제 무엇을 만들어 볼까요?'</b>)에 붙여 넣고 보냅니다. 위의 예시 카드는 고르지 않아도 됩니다.</p>
+    <div class="caution"><b>02에서 내 업무 주제로 기획안을 만든 분은</b> 아래 프롬프트의 <b>✏️ 줄을 모두 내 기획안 내용으로 고친 뒤</b> 보내세요. 그대로 보내면 가을 축제 포스터가 나옵니다.</div>
     <div class="prompt">
       <div class="label">포스터 프롬프트</div>
-      <pre>행사 포스터를 만들어 줘.
-- 행사명 : 제2회 ○○구 가을 생활문화축제 '골목에 온 예술' ✏️
-- 일시 : 10월 24일(토)~25일(일) 11:00~18:00 ✏️
-- 장소 : ○○로 일대 골목, ○○근린공원 ✏️
-- 대상 : 구민 누구나, 무료 ✏️
-- 프로그램 : 무대마당(주민 동아리 공연) · 전시마당(골목 담벼락 전시) · 체험마당(공예 · 놀이 부스) ✏️
-- 분위기 : 따뜻한 가을 골목, 주황 · 갈색 계열, 손글씨 느낌 ✏️
-- 주최 : ○○구 / 주관 : ○○구문화재단 ✏️
-- 크기 : A4 세로 포스터
-- 위에 적은 글자만 쓰고, 날짜 · 장소 · 문구를 새로 만들지 마 🔒</pre>
+      <pre>가을 골목 축제 포스터를 만들어 줘. ✏️
+
+[들어갈 글자 — 이것만]
+- 제목 : 골목에 온 예술 ✏️
+- 부제 : 제2회 ○○구 가을 생활문화축제 ✏️
+- 날짜 · 장소 : 10월 24일(토)~25일(일) · ○○로 골목 일대 ✏️
+
+[디자인]
+- 가운데에 큰 일러스트 한 장 : 노란 은행잎이 날리는 좁은 골목, 작은 버스킹 무대와 사람들 ✏️
+- 수채화 느낌, 주황 · 머스터드 · 갈색 계열의 따뜻한 색 ✏️
+- 제목은 크고 굵게, 나머지 글자는 작게. 여백을 넉넉하게 🔒
+- A4 세로 🔒
+- 위에 적은 글자 말고 다른 문구는 넣지 마 🔒</pre>
       <button class="act">복사하기</button>
     </div>
+    <div class="tip">포스터는 멀리서 한눈에 보이는 게 중요합니다. 글자는 <b class="k">세 줄만</b> 넣고, 프로그램 · 대상 · 주최는 SNS 카드로 넘깁니다.</div>
     <table>
       <tr><th>✏️ 칸</th><th>가져올 곳</th></tr>
-      <tr><td>행사명</td><td>내 기획안 제목</td></tr>
-      <tr><td>일시</td><td>3차 결과의 표지 · 행사 개요 (기획안은 [ ]라서 가상 날짜를 씀)</td></tr>
-      <tr><td>장소 · 대상 · 주최</td><td>기획안 '3. 행사 개요'</td></tr>
-      <tr><td>프로그램</td><td>기획안 '4. 프로그램 구성'에서 세 개</td></tr>
-      <tr><td>분위기</td><td>기획안에 없음 — 내가 정함</td></tr>
+      <tr><td>첫 줄 · 제목 · 부제</td><td>내 기획안 제목 (제목은 짧은 이름, 부제는 정식 이름)</td></tr>
+      <tr><td>날짜 · 장소</td><td>3차 결과의 표지 · 행사 개요 (가상 날짜를 씀)</td></tr>
+      <tr><td>일러스트 장면</td><td>내 행사에서 사람들이 무엇을 하는 장면인지 한 문장 — 내가 정함</td></tr>
+      <tr><td>화풍 · 색</td><td>기획안에 없음 — 내가 정함</td></tr>
     </table>
     <details>
-      <summary>분위기 예시 · 주제별 칸 이름 바꾸기</summary>
+      <summary>주제별 일러스트 장면 · 화풍 예시</summary>
       <div class="inner">
         <table>
-          <tr><th>주제</th><th>분위기 예시</th><th>칸 이름</th></tr>
-          <tr><td>전시</td><td>차분한 흰 배경, 작품 사진 중심, 얇은 글씨</td><td>프로그램 → 전시 · 연계 프로그램</td></tr>
-          <tr><td>공연</td><td>밤 조명 느낌, 남색 · 금색, 굵은 제목</td><td>장소 → 찾아가는 곳</td></tr>
-          <tr><td>강좌</td><td>밝고 친근한 파스텔, 손그림 아이콘</td><td>일시 → 기간 · 요일 / 프로그램 → 주차별 과정</td></tr>
-          <tr><td>공모전</td><td>깔끔한 파랑 계열, 정보가 잘 보이게</td><td>일시 → 접수 기간 / 프로그램 → 시상 · 지원</td></tr>
-          <tr><td>설명회</td><td>신뢰감 있는 남색 · 흰색, 표 형식</td><td>프로그램 → 안내 내용 · 상담</td></tr>
-          <tr><td>캠페인</td><td>밝은 초록, 아이콘 위주, 짧은 구호</td><td>프로그램 → 참여 방법</td></tr>
+          <tr><th>주제</th><th>일러스트 장면</th><th>화풍 · 색</th></tr>
+          <tr><td>전시</td><td>하얀 갤러리 벽에 걸린 작품을 보는 사람들</td><td>미니멀한 평면 일러스트, 흰 바탕에 한 가지 포인트 색</td></tr>
+          <tr><td>공연</td><td>공원 잔디밭 작은 무대의 현악 4중주와 가족 관객</td><td>밤 조명 느낌, 남색 · 금색</td></tr>
+          <tr><td>강좌</td><td>테이블에 둘러앉아 드로잉하는 주민들</td><td>밝고 친근한 파스텔, 손그림 느낌</td></tr>
+          <tr><td>공모전</td><td>전구 아이디어를 들고 있는 청년들</td><td>깔끔한 평면 일러스트, 파랑 계열</td></tr>
+          <tr><td>설명회</td><td>상담 테이블에서 이야기 나누는 상인과 담당자</td><td>신뢰감 있는 남색 · 흰색</td></tr>
+          <tr><td>캠페인</td><td>다회용 컵을 든 사람들이 오가는 골목 상점가</td><td>밝은 초록, 귀여운 아이콘 느낌</td></tr>
         </table>
       </div>
     </details>
     <div class="prompt">
       <div class="label">⭐ ✏️ 칸 채우기가 어렵다면 — 기획안을 만든 채팅에 보내기</div>
-      <pre>위 기획안으로 아래 포스터 프롬프트의 ✏️ 칸을 채워 줘. 분위기는 비워 둬.
+      <pre>위 기획안으로 아래 포스터 프롬프트의 ✏️ 칸을 채워 줘.
+일러스트 장면은 이 행사의 한 장면을 한 문장으로 써 주고, 화풍 · 색은 비워 둬.
 
 (여기에 포스터 프롬프트를 붙여넣기)</pre>
       <button class="act">복사하기</button>
@@ -588,20 +629,49 @@
   </div>
 
   <div class="step">
-    <div class="title"><span class="badge">2</span><h3>SNS 카드 2~3장</h3></div>
+    <div class="title"><span class="badge">2</span><h3>포스터를 SNS 게시물로 옮기고 애니메이션 → MP4</h3></div>
     <ol class="flow">
       <li>홈 → '디자인 만들기' → <b>'Instagram 게시물'</b>(정사각형)</li>
-      <li>포스터 탭에서 전체 선택(Ctrl+A) → 복사(Ctrl+C) → 새 디자인에 붙여넣기(Ctrl+V)</li>
-      <li>크기 · 위치 다시 배치, 글은 세 줄 이내로 줄이기</li>
-      <li>아래 '+ 페이지 추가'로 2~3장 → 다운로드 PNG</li>
+      <li>포스터에서 전체 선택(Ctrl+A) → 복사(Ctrl+C) → SNS 게시물에 붙여넣기(Ctrl+V)</li>
+      <li>위치 · 크기 조절</li>
+      <li>글자나 그림이 아닌 <b>빈 배경</b>을 클릭 → 위쪽 <b>'애니메이션'</b> → 효과 하나 고르기</li>
+      <li>공유 → 다운로드 → 파일 형식 <b>'MP4 동영상'</b> → 다운로드</li>
     </ol>
-    <table>
-      <tr><th>장</th><th>넣을 글 (세 줄 이내)</th></tr>
-      <tr><td>1 행사 소개</td><td>행사명 / 일시 / 장소</td></tr>
-      <tr><td>2 프로그램</td><td>프로그램 세 가지 (Napkin 도식을 넣어도 됨)</td></tr>
-      <tr><td>3 참여 방법</td><td>대상 · 비용 / 참여 방법 / 문의</td></tr>
-    </table>
-    <div class="tip">유료의 '크기 조정'은 이 과정을 자동으로 해 줍니다. 무료에서는 복사해서 옮깁니다.</div>
+    <div class="caution">MP4는 <b>페이지가 한 장일 때</b> 저장됩니다. 다음 3번에서 페이지를 추가하기 <b>전에</b> 먼저 저장하세요.</div>
+    <div class="tip">유료의 '크기 조정'은 포스터를 SNS 크기로 자동으로 바꿔 줍니다. 무료에서는 복사해서 옮깁니다.</div>
+  </div>
+
+  <div class="step">
+    <div class="title"><span class="badge">3</span><h3>페이지 추가 — 마스코트 SNS 카드 꾸미기</h3></div>
+    <p class="why">같은 SNS 게시물에 페이지를 하나 더 만들어, 마스코트 이미지와 템플릿 배경 · 요소로 꾸밉니다.</p>
+    <ol class="flow">
+      <li>아래 페이지 썸네일에서 <b>'+ 페이지 추가'</b></li>
+      <li>왼쪽 <b>'앱' → 'Magic Media'</b>에서 아래 <b>마스코트 프롬프트</b>로 이미지 생성 → 새 페이지에 넣기</li>
+      <li>왼쪽 <b>'디자인'(템플릿)</b>에서 <b>'축제'</b>(내 주제에 맞게) 검색 → 왕관 없는 템플릿을 골라 배경으로 쓰기</li>
+      <li>왼쪽 <b>'요소'</b>에서 단풍 · 가랜드 같은 꾸밈 요소를 검색해 얹기</li>
+      <li>글자를 내 행사 이름 · 날짜로 바꾸기 → 다운로드 PNG</li>
+    </ol>
+    <div class="prompt">
+      <div class="label">마스코트 프롬프트 · Magic Media</div>
+      <pre>가을 골목 축제의 마스코트 캐릭터 이미지를 만들어 줘. ✏️
+- 은행잎 모양의 귀여운 캐릭터, 작은 기타를 들고 있음 ✏️
+- 수채화 느낌, 포스터와 같은 주황 · 머스터드 · 갈색 계열 ✏️
+- 배경은 단색 흰색, 캐릭터 하나만 🔒</pre>
+      <button class="act">복사하기</button>
+    </div>
+    <div class="tip">배경 제거는 유료입니다. 마스코트는 <b class="k">흰 배경</b>으로 만들고 템플릿의 흰 칸 위에 올리면 경계가 보이지 않습니다.</div>
+    <div class="prompt">
+      <div class="label">⭐ 추가 — 마스코트 스티커 세트 · Magic Media</div>
+      <pre>방금 만든 은행잎 마스코트와 같은 캐릭터로 스티커 세트를 한 장에 만들어 줘. ✏️
+- 세 가지 동작 : 손 흔들며 인사 / 박수 치기 / 하트 들고 웃기 ✏️
+- 세 캐릭터 모두 같은 색 · 같은 그림체, 수채화 느낌
+- 캐릭터마다 흰 테두리가 있는 스티커 모양
+- 배경은 단색 흰색</pre>
+      <button class="act">복사하기</button>
+    </div>
+    <div class="caution"><b>이미지 생성은 무료 횟수(크레딧)가 정해져 있습니다.</b> Magic Media 화면에서 남은 횟수를 먼저 확인하고 만드세요. 마음에 들지 않는다고 여러 번 다시 만들면 금방 바닥납니다.</div>
+    <div class="tip">스티커 세트는 한 장에 세 동작을 같이 그리게 해야 캐릭터 모습이 비슷하게 나옵니다. 따로 만들면 캐릭터가 매번 조금씩 달라집니다.</div>
+    <div class="caution">마지막에 <b>포스터와 날짜 · 장소가 같은지</b> 꼭 대조하세요. 같은 행사 홍보물끼리 내용이 다르면 안 됩니다.</div>
   </div>
 </section>
 
@@ -646,7 +716,8 @@
       <tr><th>장 구분이 깨질 때</th><td>드래그 복사 대신 코드블록 '복사' 버튼 · ##가 살아 있는지 확인</td></tr>
       <tr><th>AI가 "어떤 슬라이드요?"라고 물을 때</th><td>2 · 3차를 새 채팅에 보낸 것입니다. 1차를 한 채팅으로 돌아가세요</td></tr>
       <tr><th>없는 말이 생길 때</th><td>Gamma 질문 ①은 '문구 그대로' · 2차의 [확인] 줄 대조 · 날짜와 숫자는 원본과 대조</td></tr>
-      <tr><th>라벨 · [확인]이 슬라이드에 찍힐 때</th><td>3차 정리를 건너뛴 것입니다. Gamma에서 직접 지우세요</td></tr>
+      <tr><th>라벨이 슬라이드에 찍힐 때</th><td>3차 정리를 건너뛴 것입니다. Gamma에서 직접 지우세요</td></tr>
+      <tr><th>[확인]이 슬라이드에 찍힐 때</th><td>3차를 건너뛴 것입니다. 숫자를 확인하고 [확인]을 직접 지우세요</td></tr>
       <tr><th>크레딧 · 횟수가 막힐 때</th><td>이미지 자리 표시자로 · Canva AI 대신 템플릿 · 왕관 요소 빼기</td></tr>
     </table>
   </div>
@@ -759,6 +830,18 @@ document.querySelectorAll('.act').forEach(function(btn){
   });
 });
 
+
+/* ---------- 단계 버튼 : 이동한 단계 잠깐 강조 ---------- */
+document.querySelectorAll('.stepbar a, .flow a, .linkbtn[href^="#"]').forEach(function(a){
+  a.addEventListener('click', function(e){
+    var el = document.querySelector(a.getAttribute('href'));
+    if (!el) return;
+    e.preventDefault();
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    el.classList.add('flash');
+    setTimeout(function(){ el.classList.remove('flash'); }, 1200);
+  });
+});
 /* ---------- 왼쪽 레일 ---------- */
 var links = document.querySelectorAll('.rail a');
 var parts = document.querySelectorAll('.part');
